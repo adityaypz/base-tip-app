@@ -2,6 +2,7 @@
 
 import { ConnectWallet } from '@/components/ConnectWallet';
 import { TipForm } from '@/components/TipForm';
+import { ParticleNetwork } from '@/components/ParticleNetwork';
 import { useAccount } from 'wagmi';
 
 export default function Home() {
@@ -9,18 +10,13 @@ export default function Home() {
 
   return (
     <>
-      {/* Ambient Background */}
-      <div className="bg-ambient" />
+      {/* Interactive Particle Network Background */}
+      <ParticleNetwork />
 
       <div className="app-container">
         {/* Header */}
         <header className="header">
           <div className="logo">
-            <div className="logo-mark">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" fill="white" fillOpacity="0.9"/>
-              </svg>
-            </div>
             <span className="logo-text">BaseTip</span>
           </div>
           <div className="header-right">

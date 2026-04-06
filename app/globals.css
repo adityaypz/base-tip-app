@@ -55,44 +55,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== AMBIENT BACKGROUND ===== */
-.bg-ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.bg-ambient::before {
-  content: '';
-  position: absolute;
-  width: 800px;
-  height: 800px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 82, 255, 0.12) 0%, transparent 70%);
-  top: -300px;
-  right: -200px;
-  animation: ambientDrift 12s ease-in-out infinite alternate;
-}
-
-.bg-ambient::after {
-  content: '';
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(77, 133, 255, 0.06) 0%, transparent 70%);
-  bottom: -200px;
-  left: -150px;
-  animation: ambientDrift 15s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes ambientDrift {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(30px, -20px) scale(1.1); }
-}
-
 /* ===== LAYOUT ===== */
 .app-container {
   position: relative;
@@ -125,24 +87,8 @@ body {
   text-decoration: none;
 }
 
-.logo-mark {
-  width: 32px;
-  height: 32px;
-  background: var(--gradient-blue);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 16px var(--base-blue-glow);
-}
-
-.logo-mark svg {
-  width: 18px;
-  height: 18px;
-}
-
 .logo-text {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.3px;
