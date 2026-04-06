@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     title: 'BaseTip — Send Tips on Base',
     description: 'A simple and beautiful tipping app built on Base L2.',
   },
+  other: {
+    'base:app_id': '69a7e771f1a340127fafeb82',
+  },
 };
 
 export default function RootLayout({
