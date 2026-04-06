@@ -92,7 +92,11 @@ export function TipForm() {
     return (
       <div className="tip-success">
         <div className="success-animation">
-          <span className="success-emoji">{selectedEmoji}</span>
+          <div className="success-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
           <h3>Tip Sent!</h3>
           <p className="success-amount">{effectiveAmount} ETH</p>
           <a

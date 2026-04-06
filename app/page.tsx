@@ -9,24 +9,24 @@ export default function Home() {
 
   return (
     <>
-      {/* Background Effects */}
-      <div className="bg-pattern">
-        <div className="bg-gradient-orb" />
-        <div className="bg-gradient-orb" />
-      </div>
+      {/* Ambient Background */}
+      <div className="bg-ambient" />
 
       <div className="app-container">
         {/* Header */}
         <header className="header">
           <div className="logo">
-            <div className="logo-icon">⚡</div>
+            <div className="logo-mark">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" fill="white" fillOpacity="0.9"/>
+              </svg>
+            </div>
             <span className="logo-text">BaseTip</span>
-            <span className="logo-badge">Base</span>
           </div>
           <div className="header-right">
-            <div className="chain-badge">
-              <span className="chain-dot" />
-              Base Mainnet
+            <div className="network-pill">
+              <span className="network-dot" />
+              Base
             </div>
           </div>
         </header>
@@ -36,23 +36,23 @@ export default function Home() {
           {/* Hero */}
           <section className="hero">
             <h1>
-              Tip Anyone on{' '}
+              Send Tips on{' '}
               <span className="highlight">Base</span>
             </h1>
             <p>
-              Send ETH tips instantly on Base L2. Low fees, fast transactions, onchain proof.
+              Instant ETH tips with near-zero fees. Fast, simple, onchain.
             </p>
           </section>
 
           {/* Stats */}
-          <div className="stats-bar">
+          <div className="stats-row">
             <div className="stat-item">
               <div className="stat-value">~$0.001</div>
               <div className="stat-label">Gas Fee</div>
             </div>
             <div className="stat-item">
               <div className="stat-value">&lt;1s</div>
-              <div className="stat-label">Confirmation</div>
+              <div className="stat-label">Speed</div>
             </div>
             <div className="stat-item">
               <div className="stat-value">100%</div>
@@ -70,7 +70,7 @@ export default function Home() {
           {/* Connected State */}
           {isConnected && (
             <>
-              <div className="card" style={{ maxWidth: '480px' }}>
+              <div className="card" style={{ maxWidth: '440px' }}>
                 <ConnectWallet />
               </div>
               <div className="card">
@@ -85,10 +85,10 @@ export default function Home() {
           Built on{' '}
           <a href="https://base.org" target="_blank" rel="noopener noreferrer">
             Base
-          </a>{' '}
-          · Powered by{' '}
-          <a href="https://wagmi.sh" target="_blank" rel="noopener noreferrer">
-            wagmi
+          </a>
+          {' · '}
+          <a href="https://basescan.org" target="_blank" rel="noopener noreferrer">
+            Explorer
           </a>
         </footer>
       </div>
