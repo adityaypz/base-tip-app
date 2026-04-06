@@ -2,9 +2,9 @@ import { createConfig, http, createStorage, cookieStorage } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 
-// TODO: Replace with your actual Builder Code from base.dev after verification
-// import { Attribution } from 'ox/erc8021';
-// const DATA_SUFFIX = Attribution.toDataSuffix({ codes: ['YOUR-BUILDER-CODE'] });
+// Builder Code integration from base.dev
+import { Attribution } from 'ox/erc8021';
+const DATA_SUFFIX = Attribution.toDataSuffix({ codes: ['bc_qbyukwvj'] });
 
 export const config = createConfig({
   chains: [base],
@@ -16,7 +16,7 @@ export const config = createConfig({
   transports: {
     [base.id]: http(),
   },
-  // dataSuffix: DATA_SUFFIX, // Uncomment after getting Builder Code
+  dataSuffix: DATA_SUFFIX,
 });
 
 declare module 'wagmi' {
