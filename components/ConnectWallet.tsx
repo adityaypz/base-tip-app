@@ -32,14 +32,25 @@ export function ConnectWallet() {
         <h2>Connect Your Wallet</h2>
         <p>Connect to start tipping on Base</p>
         <div className="connector-buttons">
-          {connectors.map((connector) => (
+          {connectors
+            .filter((c, index, self) => {
+              // Deduplicate by name
+              const isDuplicate = self.findIndex(x => x.name === c.name) !== index;
+              if (isDuplicate) return false;
+              // Hide generic 'Injected' if we have better EIP-6963 wallets
+              if (c.id === 'injected' && self.length > 2) return false;
+              return true;
+            })
+            .sort((a, b) => (a.id === 'baseAccount' ? -1 : b.id === 'baseAccount' ? 1 : 0))
+            .slice(0, 4) // Show max 4 wallets to avoid UI spam
+            .map((connector) => (
             <button
               key={connector.uid}
               onClick={() => connect({ connector })}
               disabled={isConnecting}
               className="btn btn-connect"
             >
-              {isConnecting ? 'Connecting...' : `${connector.name}`}
+              {isConnecting ? 'Connecting...' : (connector.id === 'baseAccount' ? 'Base / Smart Wallet' : connector.name)}
             </button>
           ))}
         </div>
