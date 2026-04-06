@@ -9,6 +9,9 @@ import {
 } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { parseEther, isAddress } from 'viem';
+import { Attribution } from 'ox/erc8021';
+
+const DATA_SUFFIX = Attribution.toDataSuffix({ codes: ['bc_qbyukwvj'] });
 
 const PRESET_AMOUNTS = ['0.0001', '0.0005', '0.001', '0.005', '0.01'];
 
@@ -54,6 +57,7 @@ export function TipForm() {
     sendTransaction({
       to: recipient as `0x${string}`,
       value: parseEther(effectiveAmount),
+      dataSuffix: DATA_SUFFIX,
     });
   };
 
