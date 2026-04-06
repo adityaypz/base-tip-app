@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import {
   useAccount,
-  useSendTransaction,
   useWaitForTransactionReceipt,
   useSwitchChain,
+  useWalletClient,
 } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { parseEther, isAddress } from 'viem';
@@ -18,24 +18,20 @@ const PRESET_AMOUNTS = ['0.0001', '0.0005', '0.001', '0.005', '0.01'];
 const EMOJI_REACTIONS = ['☕', '🍕', '🎉', '💎', '🚀'];
 
 export function TipForm() {
-  const { isConnected, chainId } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
+  const { data: walletClient } = useWalletClient();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('0.0001');
   const [customAmount, setCustomAmount] = useState('');
   const [message, setMessage] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('☕');
   const [txSuccess, setTxSuccess] = useState(false);
+  const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
+  const [isPending, setIsPending] = useState(false);
+  const [sendError, setSendError] = useState<Error | null>(null);
   
   const isWrongNetwork = chainId !== base.id;
-
-  const {
-    data: hash,
-    isPending,
-    sendTransaction,
-    error: sendError,
-    reset,
-  } = useSendTransaction();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
@@ -45,8 +41,8 @@ export function TipForm() {
   const isValidAddress = recipient && isAddress(recipient);
   const isValidAmount = effectiveAmount && parseFloat(effectiveAmount) > 0;
 
-  const handleSendTip = () => {
-    if (!isValidAddress || !isValidAmount) return;
+  const handleSendTip = async () => {
+    if (!isValidAddress || !isValidAmount || !walletClient || !address) return;
 
     if (isWrongNetwork && switchChain) {
       switchChain({ chainId: base.id });
@@ -54,20 +50,34 @@ export function TipForm() {
     }
 
     setTxSuccess(false);
-    sendTransaction({
-      to: recipient as `0x${string}`,
-      value: parseEther(effectiveAmount),
-      data: DATA_SUFFIX as `0x${string}`,
-    });
+    setIsPending(true);
+    setSendError(null);
+
+    try {
+      // Use viem walletClient directly to force data payload through
+      const txHash = await walletClient.sendTransaction({
+        account: address,
+        to: recipient as `0x${string}`,
+        value: parseEther(effectiveAmount),
+        data: DATA_SUFFIX as `0x${string}`,
+        chain: base,
+      });
+      setHash(txHash);
+    } catch (err) {
+      setSendError(err instanceof Error ? err : new Error('Transaction failed'));
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleNewTip = () => {
-    reset();
+    setHash(undefined);
     setRecipient('');
     setAmount('0.0001');
     setCustomAmount('');
     setMessage('');
     setTxSuccess(false);
+    setSendError(null);
   };
 
   if (!isConnected) {
