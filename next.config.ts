@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Prevent Next.js from bundling server-only Node modules in these packages
+  serverExternalPackages: ['@coinbase/cdp-sdk', '@base-org/account'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Fix for @base-org/account and @coinbase/cdp-sdk Node.js modules
@@ -22,15 +24,6 @@ const nextConfig: NextConfig = {
       };
     }
     return config;
-  },
-  // Turbopack equivalent
-  turbopack: {
-    resolveAlias: {
-      fs: { browser: './empty-module.js' },
-      net: { browser: './empty-module.js' },
-      tls: { browser: './empty-module.js' },
-      child_process: { browser: './empty-module.js' },
-    },
   },
 };
 
