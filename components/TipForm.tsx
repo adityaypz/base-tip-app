@@ -5,7 +5,9 @@ import {
   useAccount,
   useSendTransaction,
   useWaitForTransactionReceipt,
+  useSwitchChain,
 } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { parseEther, isAddress } from 'viem';
 
 const PRESET_AMOUNTS = ['0.0001', '0.0005', '0.001', '0.005', '0.01'];
@@ -13,13 +15,16 @@ const PRESET_AMOUNTS = ['0.0001', '0.0005', '0.001', '0.005', '0.01'];
 const EMOJI_REACTIONS = ['☕', '🍕', '🎉', '💎', '🚀'];
 
 export function TipForm() {
-  const { isConnected } = useAccount();
+  const { isConnected, chainId } = useAccount();
+  const { switchChain } = useSwitchChain();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('0.0001');
   const [customAmount, setCustomAmount] = useState('');
   const [message, setMessage] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('☕');
   const [txSuccess, setTxSuccess] = useState(false);
+  
+  const isWrongNetwork = chainId !== base.id;
 
   const {
     data: hash,
@@ -39,6 +44,11 @@ export function TipForm() {
 
   const handleSendTip = () => {
     if (!isValidAddress || !isValidAmount) return;
+
+    if (isWrongNetwork && switchChain) {
+      switchChain({ chainId: base.id });
+      return;
+    }
 
     setTxSuccess(false);
     sendTransaction({
@@ -176,11 +186,13 @@ export function TipForm() {
         disabled={!isValidAddress || !isValidAmount || isPending || isConfirming}
         className="btn btn-primary btn-send"
       >
-        {isPending
-          ? '⏳ Confirm in Wallet...'
-          : isConfirming
-            ? '⏳ Confirming...'
-            : `Send ${effectiveAmount} ETH ${selectedEmoji}`}
+        {isWrongNetwork
+          ? 'Switch to Base Network'
+          : isPending
+            ? '⏳ Confirm in Wallet...'
+            : isConfirming
+              ? '⏳ Confirming...'
+              : `Send ${effectiveAmount} ETH ${selectedEmoji}`}
       </button>
 
       {sendError && (

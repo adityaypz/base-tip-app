@@ -1,11 +1,15 @@
 'use client';
 
-import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
+import { base } from 'wagmi/chains';
 
 export function ConnectWallet() {
-  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
+  const { address, isConnected, isConnecting, isReconnecting, chainId } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+  
+  const isWrongNetwork = isConnected && chainId !== base.id;
 
   if (isReconnecting) {
     return (
@@ -50,15 +54,25 @@ export function ConnectWallet() {
           {address?.slice(2, 4).toUpperCase()}
         </div>
         <div className="wallet-info">
-          <span className="wallet-label">Connected</span>
+          {isWrongNetwork ? (
+            <span className="wallet-label" style={{ color: 'var(--error)' }}>Wrong Network</span>
+          ) : (
+            <span className="wallet-label">Connected to Base</span>
+          )}
           <span className="wallet-address">
             {address?.slice(0, 6)}...{address?.slice(-4)}
           </span>
         </div>
       </div>
-      <button onClick={() => disconnect()} className="btn btn-disconnect">
-        Disconnect
-      </button>
+      {isWrongNetwork ? (
+        <button onClick={() => switchChain?.({ chainId: base.id })} className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '12px' }}>
+          Switch to Base
+        </button>
+      ) : (
+        <button onClick={() => disconnect()} className="btn btn-disconnect">
+          Disconnect
+        </button>
+      )}
     </div>
   );
 }
