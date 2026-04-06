@@ -57,7 +57,7 @@ export function TipForm() {
     sendTransaction({
       to: recipient as `0x${string}`,
       value: parseEther(effectiveAmount),
-      dataSuffix: DATA_SUFFIX,
+      data: DATA_SUFFIX as `0x${string}`,
     });
   };
 
